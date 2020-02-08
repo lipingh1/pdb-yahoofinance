@@ -1,0 +1,35 @@
+version: 2.1
+
+terraform_config: &terraform_config
+  docker:
+    - image: hashicorp/terraform:0.12.2
+  working_directory: ~/working
+  environment:
+    BASH_ENV: /root/.bashrc
+
+jobs:
+  deploy:
+    <<: *terraform_config
+    steps:
+      - checkout
+      - run:
+          name: export access keys
+          command: |
+            cd && touch $BASH_ENV
+            echo 'export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY' >> $BASH_ENV
+            echo 'export AWS_SECRECT_ACCESS_KEY=$AWS_SECRET_KEY' >> $BASH_ENV
+            echo 'export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION' >> $BASH_ENV
+
+      - run:
+          name: terraform script
+          command: |
+            source $BASH_ENV
+            terraform init --backend=true --backend-config=environments/preprod/backend.tfvars
+            terraform plan --var-file=environments/preprod/variables.tfvars
+            terraform apply -auto-approve --var-file=environments/preprod/variables.tfvars
+
+workflows:
+  version: 1
+  deploy-terraform:
+    jobs:
+      - deploy
