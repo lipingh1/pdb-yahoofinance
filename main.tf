@@ -1,8 +1,8 @@
 resource "aws_s3_bucket" "raw_yahoo_bucket" {
-	bucket = "pdl-yahoofinance"
+	bucket = "${var.bucket_name}"
 
 	tags = {
-		Environment = "Dev"
+		Environment = "${var.environment}"
 		Service = "Yahoofinance"
 		Type = "Data Lake Storage"
 	}
