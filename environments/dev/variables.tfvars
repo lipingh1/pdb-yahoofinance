@@ -1,2 +1,2 @@
 environment = "dev"
-bucket_name = "pdl-dev-yahoofinance"
+bucket_name = "pdl-dev-nasa"

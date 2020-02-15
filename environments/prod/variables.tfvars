@@ -1,2 +1,2 @@
 environment = "prod"
-bucket_name = "pdl-prod-yahoofinance"
+bucket_name = "pdl-prod-nasa"
