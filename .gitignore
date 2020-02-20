@@ -1,2 +1,5 @@
 .terraform
 .DS_store
+.pytest_cache
+venv
+__pycache__
