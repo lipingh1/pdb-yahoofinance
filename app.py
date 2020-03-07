@@ -1,20 +1,36 @@
 import requests
 from datetime import datetime
-
-insight_api_response = requests.get('https://api.nasa.gov/insight_weather/?api_key=DEMO_KEY&feedtype=json&ver=1.0')
-insight_data = insight_api_response.json()
-
-date_time_obj = datetime.now()
-timestamp_str = date_time_obj.strftime("%Y%m%d")
-print(timestamp_str)
-
-insight_data["ingestion_timestamp"] = timestamp_str
-
-print(insight_data)
+import boto3, json
 
 
 def folder_path_gen(timestamp_str):
 	folder_path = f"insight/{timestamp_str}/data/insightdata.json" 
 	return folder_path
 
-print(folder_path_gen(timestamp_str))
+
+def add_timestamp_to_insight_json(timestamp, input_json):
+	input_json["ingestion_timestamp"] = timestamp
+	return input_json
+
+
+def main():
+	insight_api_response = requests.get('https://api.nasa.gov/insight_weather/?api_key=DEMO_KEY&feedtype=json&ver=1.0')
+	insight_data = insight_api_response.json()
+
+	timestamp_str = datetime.now().strftime("%Y%m%d")
+	add_timestamp_to_insight_json(timestamp_str,insight_data)
+
+	folder_path = folder_path_gen(timestamp_str)
+
+	s3 = boto3.client('s3')
+	s3.put_object(Body=json.dumps(insight_data), Bucket='pdl-dev-nasa', Key=folder_path)
+
+	return
+
+main()
+
+"""
+client= boto3.client('s3')
+client.put_object(Body=binary, Bucket='my bucket', Key='filpath/file.txt')
+"""
+
