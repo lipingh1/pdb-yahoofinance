@@ -1,5 +1,6 @@
 import pytest
-from app import add_timestamp_to_insight_json
+from ..app import add_timestamp_to_insight_json
+
 
 def test_timestamp_add_correct():
 	input_timestamp = "20020202"
