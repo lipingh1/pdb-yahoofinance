@@ -1,6 +1,8 @@
-import requests
 from datetime import datetime
-import boto3, json
+
+import boto3
+import json
+import requests
 
 
 def folder_path_gen(timestamp_str):
@@ -26,11 +28,8 @@ def main():
 	s3.put_object(Body=json.dumps(insight_data), Bucket='pdl-dev-nasa', Key=folder_path)
 
 	return
+ 
 
-main()
 
-"""
-client= boto3.client('s3')
-client.put_object(Body=binary, Bucket='my bucket', Key='filpath/file.txt')
-"""
-
+if __name__ == "__main__":
+	main()
